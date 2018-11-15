@@ -1,0 +1,7 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended", "typescript-eslint-parser"],
+  "jsRules": {},
+  "rules": {},
+  "rulesDirectory": []
+}

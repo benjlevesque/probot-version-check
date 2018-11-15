@@ -1,0 +1,45 @@
+{
+  "action": "edited",
+  "number": 2,
+  "pull_request": {
+    "user": {
+      "login": "repousername"
+    },
+    "head": {
+      "label": "repousername:branchname",
+      "ref": "branchname",
+      "sha": "efgh",
+      "user": {
+        "login": "repousername"
+      },
+      "repo": {
+        "name": "pr-tests",
+        "owner": {
+          "login": "repousername"
+        }
+      }
+    },
+    "base": {
+      "label": "repousername:master",
+      "ref": "master",
+      "sha": "abcd",
+      "user": {
+        "login": "repousername"
+      },
+      "repo": {
+        "name": "pr-tests",
+        "owner": {
+          "login": "repousername"
+        }
+      }
+    }
+  },
+  "repository": {
+    "name": "pr-tests",
+    "full_name": "repousername/pr-tests",
+    "private": false,
+    "owner": {
+      "login": "repousername"
+    }
+  }
+}
