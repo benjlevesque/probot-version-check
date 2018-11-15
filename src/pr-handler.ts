@@ -20,4 +20,9 @@ export default async function(context: Context) {
     branchPackageVersion > basePackageVersion,
     `${basePackageVersion} => ${branchPackageVersion}`,
   );
+  const params = context.issue({
+    body:
+      "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
+  });
+  await context.github.issues.createComment(params);
 }
