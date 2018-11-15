@@ -1,0 +1,49 @@
+{
+  "action": "created",
+  "issue": {
+    "url": "https://api.github.com/repos/benjlevesque/pr-tests/issues/8",
+    "number": 8,
+    "title": "Update README.md",
+    "user": {
+      "login": "benjlevesque"
+    },
+    "labels": [],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [],
+    "milestone": null,
+    "comments": 10,
+    "created_at": "2018-11-15T14:57:42Z",
+    "updated_at": "2018-11-15T17:43:07Z",
+    "closed_at": null,
+    "author_association": "OWNER",
+    "pull_request": {
+      "url": "https://api.github.com/repos/benjlevesque/pr-tests/pulls/8",
+      "html_url": "https://github.com/benjlevesque/pr-tests/pull/8",
+      "diff_url": "https://github.com/benjlevesque/pr-tests/pull/8.diff",
+      "patch_url": "https://github.com/benjlevesque/pr-tests/pull/8.patch"
+    },
+    "body": " \r\n  ## Change Description\r\n _This project uses semver, please check the scope of this pr:_\r\n - [ ] #none# -documentation fixes and/or test additions\r\n - [ ] #patch# - backwards-compatible bug fix\r\n - [ ] #minor# - adding functionality in a backwards-compatible manner\r\n - [ ] #major#- incompatible API change\r\n \r\n ## Technical Design\r\n"
+  },
+  "comment": {
+    "url": "https://api.github.com/repos/benjlevesque/pr-tests/issues/comments/439128321",
+    "html_url": "https://github.com/benjlevesque/pr-tests/pull/8#issuecomment-439128321",
+    "issue_url": "https://api.github.com/repos/benjlevesque/pr-tests/issues/8",
+    "user": {
+      "login": "benjlevesque"
+    },
+    "created_at": "2018-11-15T17:43:07Z",
+    "updated_at": "2018-11-15T17:43:07Z",
+    "author_association": "OWNER",
+    "body": "/bump major"
+  },
+  "repository": {
+    "name": "pr-tests",
+    "full_name": "benjlevesque/pr-tests",
+    "private": false,
+    "owner": {
+      "login": "benjlevesque"
+    }
+  }
+}

@@ -5,9 +5,9 @@ import { Probot } from "probot";
 import { promisify } from "util";
 import myProbotApp from "../src";
 import { getType } from "../src/bump-command-handler";
+import commentPayload from "./fixtures/comment.created.json";
 import prEditedPayload from "./fixtures/pull_request.edited.json";
 import prSyncedPayload from "./fixtures/pull_request.synchronize.json";
-
 const baseUrl = "https://api.github.com/repos/repousername/pr-tests";
 
 nock.disableNetConnect();
@@ -70,6 +70,25 @@ function testGenerator(
   };
 }
 
+describe("My Probot app", () => {
+  test(
+    "Pull request edited event should send a failure check",
+    testGenerator("1.0.0", "1.0.0", "failure", prEditedPayload),
+  );
+  test(
+    "Pull request edited event should send a success check",
+    testGenerator("1.1.0", "1.0.0", "success", prEditedPayload),
+  );
+
+  test(
+    "Pull request synchronize event should send a failure check",
+    testGenerator("1.0.0", "1.0.0", "failure", prSyncedPayload),
+  );
+  test(
+    "Pull request synchronize event should send a success check",
+    testGenerator("1.1.0", "1.0.0", "success", prSyncedPayload),
+  );
+});
 describe("Comment - bump version", () => {
   let probot: Probot;
   beforeEach(() => {
@@ -109,5 +128,17 @@ describe("Comment - bump version", () => {
     expect(getType(command("foo"))).toBe("foo");
     expect(getType(command("foo bar"))).toBe("foo");
     expect(getType(command("foo,bar"))).toBe("foo");
+  });
+});
+
+describe("commit", () => {
+  let probot: Probot;
+  beforeEach(() => {
+    probot = new Probot({ id: 123, cert: "test" });
+    const app = probot.load(myProbotApp);
+    app.app = () => "test";
+  });
+  test("should work!", async () => {
+    await probot.receive({ name: "issue_comment", payload: commentPayload });
   });
 });
