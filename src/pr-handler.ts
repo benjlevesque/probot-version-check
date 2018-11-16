@@ -1,7 +1,25 @@
-import { Context } from "probot"; // eslint-disable-line no-unused-vars
+import { Application, Context } from "probot"; // eslint-disable-line no-unused-vars
 import { createCheck, getJsonContent, setCheck } from "./utils";
 
-export default async function(context: Context) {
+export async function maybeSendMessage(context: Context, appName: string) {
+  const response = await context.github.issues.getComments(
+    context.issue({
+      creator: appName,
+      state: "all",
+    }),
+  );
+
+  if (response.data.length > 0) {
+    return;
+  }
+  const params = context.issue({
+    body:
+      "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
+  });
+  await context.github.issues.createComment(params);
+}
+
+export default async function(context: Context, app: Application) {
   const checkId = await createCheck(context);
   const { pull_request: pr } = context.payload;
   const branchPackageVersion = (await getJsonContent(
@@ -15,17 +33,13 @@ export default async function(context: Context) {
     "package.json",
   )).version;
   const ok = branchPackageVersion > basePackageVersion;
+  if (!ok) {
+    await maybeSendMessage(context, app.app.name);
+  }
   await setCheck(
     context,
     checkId,
     ok,
     `${basePackageVersion} => ${branchPackageVersion}`,
   );
-  if (!ok) {
-    const params = context.issue({
-      body:
-        "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
-    });
-    await context.github.issues.createComment(params);
-  }
 }
