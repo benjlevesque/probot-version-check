@@ -10,12 +10,20 @@ export async function getJsonContent(
   commit: any,
   path: string,
 ): Promise<any> {
-  const contentResponse = await context.github.repos.getContent(
-    context.repo({
-      path,
-      ref: commit.ref,
-    }),
-  );
+  let contentResponse;
+  try {
+    contentResponse = await context.github.repos.getContent(
+      context.repo({
+        path,
+        ref: commit.ref,
+      }),
+    );
+  } catch (er) {
+    if (er.message === "Not Found") {
+      return null;
+    }
+    throw er;
+  }
   return {
     content: JSON.parse(
       Buffer.from(contentResponse.data.content, "base64").toString(),
