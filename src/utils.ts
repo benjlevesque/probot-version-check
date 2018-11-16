@@ -27,7 +27,8 @@ export async function getJsonContent(
 export async function setCheck(
   context: Context,
   checkId: number,
-  ok: boolean,
+  conclusion: "success" | "failure" | "neutral" | "action_required",
+  title: string,
   summary: string,
 ) {
   const { pull_request } = context.payload;
@@ -38,13 +39,11 @@ export async function setCheck(
   await context.github.checks.update({
     check_run_id: checkId,
     completed_at: date8061(new Date()),
-    conclusion: ok ? "success" : "failure",
+    conclusion,
     name: "Version Bump Check",
     output: {
       summary,
-      text:
-        "Compares your package.json version to the base, yours should be higher.",
-      title: ok ? "Version OK" : "Version not updated",
+      title,
     },
     owner,
     repo,

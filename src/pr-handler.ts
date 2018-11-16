@@ -21,16 +21,30 @@ export async function maybeSendMessage(context: Context, appName: string) {
 export default async function(context: Context, app: Application) {
   const checkId = await createCheck(context);
   const { pull_request: pr } = context.payload;
-  const branchPackageVersion = (await getJsonContent(
-    context,
-    pr.head,
-    "package.json",
-  )).content.version;
-  const basePackageVersion = (await getJsonContent(
-    context,
-    pr.base,
-    "package.json",
-  )).content.version;
+  const branchContent = await getJsonContent(context, pr.head, "package.json");
+  if (branchContent === null) {
+    await setCheck(
+      context,
+      checkId,
+      "neutral",
+      "Unknown project type",
+      "This branch does not contain a package.json",
+    );
+    return;
+  }
+  const branchPackageVersion = branchContent.content.version;
+  const baseContent = await getJsonContent(context, pr.base, "package.json");
+  if (baseContent === null) {
+    await setCheck(
+      context,
+      checkId,
+      "neutral",
+      "Check irrelevant",
+      `${pr.base.ref} does not contain a package.json to compare to`,
+    );
+    return;
+  }
+  const basePackageVersion = baseContent.content.version;
   const ok = branchPackageVersion > basePackageVersion;
   if (!ok) {
     await maybeSendMessage(context, app.app.name);
@@ -38,7 +52,8 @@ export default async function(context: Context, app: Application) {
   await setCheck(
     context,
     checkId,
-    ok,
+    ok ? "success" : "action_required",
+    ok ? "Version OK" : "Version not updated",
     `${basePackageVersion} => ${branchPackageVersion}`,
   );
 }
