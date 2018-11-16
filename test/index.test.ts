@@ -125,20 +125,21 @@ describe("Comment - bump version", () => {
     expect(getType(command("patch"))).toBe("patch");
     expect(getType(command("minor"))).toBe("minor");
     expect(getType(command("major"))).toBe("major");
-    expect(getType(command("foo"))).toBe("foo");
-    expect(getType(command("foo bar"))).toBe("foo");
-    expect(getType(command("foo,bar"))).toBe("foo");
+    expect(getType(command("major !"))).toBe("major");
+    expect(getType(command("foo"))).toBeNull();
+    expect(getType(command("foo bar"))).toBeNull();
+    expect(getType(command("foo,bar"))).toBeNull();
   });
 });
 
-describe("commit", () => {
-  let probot: Probot;
-  beforeEach(() => {
-    probot = new Probot({ id: 123, cert: "test" });
-    const app = probot.load(myProbotApp);
-    app.app = () => "test";
-  });
-  test("should work!", async () => {
-    await probot.receive({ name: "issue_comment", payload: commentPayload });
-  });
-});
+// describe("commit", () => {
+//   let probot: Probot;
+//   beforeEach(() => {
+//     probot = new Probot({ id: 123, cert: "test" });
+//     const app = probot.load(myProbotApp);
+//     app.app = () => "test";
+//   });
+//   test("should work!", async () => {
+//     await probot.receive({ name: "issue_comment", payload: commentPayload });
+//   });
+//});

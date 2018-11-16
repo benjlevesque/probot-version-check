@@ -5,7 +5,6 @@ export async function maybeSendMessage(context: Context, appName: string) {
   const response = await context.github.issues.getComments(
     context.issue({
       creator: appName,
-      state: "all",
     }),
   );
 
@@ -23,15 +22,15 @@ export default async function(context: Context, app: Application) {
   const checkId = await createCheck(context);
   const { pull_request: pr } = context.payload;
   const branchPackageVersion = (await getJsonContent(
-    context.github,
+    context,
     pr.head,
     "package.json",
-  )).version;
+  )).content.version;
   const basePackageVersion = (await getJsonContent(
-    context.github,
+    context,
     pr.base,
     "package.json",
-  )).version;
+  )).content.version;
   const ok = branchPackageVersion > basePackageVersion;
   if (!ok) {
     await maybeSendMessage(context, app.app.name);

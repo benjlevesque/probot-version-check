@@ -1,23 +1,27 @@
 import atob from "atob";
 import dateformat from "dateformat";
 import { Context } from "probot";
-import { GitHubAPI } from "probot/lib/github";
 
 function date8061(date: Date) {
   return `${dateformat(date, "yyyy-mm-dd")}T${dateformat(date, "HH:MM:ss")}Z`;
 }
 export async function getJsonContent(
-  gh: GitHubAPI,
+  context: Context,
   commit: any,
   path: string,
 ): Promise<any> {
-  const packageJsonRaw = await gh.repos.getContent({
-    owner: commit.repo.owner.login,
-    path,
-    ref: commit.ref,
-    repo: commit.repo.name,
-  });
-  return JSON.parse(atob(packageJsonRaw.data.content));
+  const contentResponse = await context.github.repos.getContent(
+    context.repo({
+      path,
+      ref: commit.ref,
+    }),
+  );
+  return {
+    content: JSON.parse(
+      Buffer.from(contentResponse.data.content, "base64").toString(),
+    ),
+    sha: contentResponse.data.sha,
+  };
 }
 
 export async function setCheck(
