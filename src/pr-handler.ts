@@ -14,15 +14,18 @@ export default async function(context: Context) {
     pr.base,
     "package.json",
   )).version;
+  const ok = branchPackageVersion > basePackageVersion;
   await setCheck(
     context,
     checkId,
-    branchPackageVersion > basePackageVersion,
+    ok,
     `${basePackageVersion} => ${branchPackageVersion}`,
   );
-  const params = context.issue({
-    body:
-      "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
-  });
-  await context.github.issues.createComment(params);
+  if (!ok) {
+    const params = context.issue({
+      body:
+        "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
+    });
+    await context.github.issues.createComment(params);
+  }
 }
