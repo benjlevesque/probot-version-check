@@ -19,10 +19,7 @@ export async function getJsonContent(
       }),
     );
   } catch (er) {
-    if (er.message === "Not Found") {
       return null;
-    }
-    throw er;
   }
   return {
     content: JSON.parse(

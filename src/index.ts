@@ -9,4 +9,6 @@ export = (app: Application) => {
   app.on("*", async (context: Context) => {
     app.log(`Received: ${context.event}`);
   });
+
+  commands(app, "restart", ()=>process.exit(1));
 };

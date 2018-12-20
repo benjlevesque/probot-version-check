@@ -9,13 +9,16 @@ export async function maybeSendMessage(context: Context, appName: string) {
   );
 
   if (response.data.length > 0) {
+    console.log('no need to send help comment');
     return;
   }
+  console.log('sending help comment...');
   const params = context.issue({
     body:
       "You can bump the package version using `/bump [major|minor|patch]`. :+1: ",
   });
   await context.github.issues.createComment(params);
+  console.log('help comment sent');
 }
 
 export default async function(context: Context, app: Application) {
@@ -46,9 +49,7 @@ export default async function(context: Context, app: Application) {
   }
   const basePackageVersion = baseContent.content.version;
   const ok = branchPackageVersion > basePackageVersion;
-  if (!ok) {
-    await maybeSendMessage(context, app.app.name);
-  }
+  
   await setCheck(
     context,
     checkId,
@@ -56,4 +57,7 @@ export default async function(context: Context, app: Application) {
     ok ? "Version OK" : "Version not updated",
     `${basePackageVersion} => ${branchPackageVersion}`,
   );
+  if (!ok) {
+    await maybeSendMessage(context, app.app.name);
+  }
 }
